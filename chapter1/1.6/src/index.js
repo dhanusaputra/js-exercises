@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import ReactDOM from 'react-dom'
 
 const App = () => {
@@ -14,12 +15,7 @@ const App = () => {
       <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button handleClick={() => setBad(bad + 1)} text="bad" />
       <Header text="statistics" />
-      <Display text="good" value={good} />
-      <Display text="neutral" value={neutral} />
-      <Display text="bad" value={bad} />
-      <Display text="all" value={good + neutral + bad} />
-      <Display text="average" value={good - bad / (good + neutral + bad)} />
-      <Display text="positive" value={100 * (good / (good + neutral + bad))} unit="%" />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
@@ -38,9 +34,35 @@ const Button = (props) => {
   )
 }
 
-const Display = ({text, value, unit}) => {
+const Statistics = ({good, neutral, bad}) => {
+  if (good + neutral + bad === 0) {
+    return (
+      <div>No feedback given</div>
+    )
+  }
+
   return (
-    <div>{text} {value} {unit}</div>
+    <div>
+      <table>
+      <tbody>
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={good + neutral + bad} />
+        <Statistic text="average" value={good - bad / (good + neutral + bad)} />
+        <Statistic text="positive" value={100 * (good / (good + neutral + bad))} unit="%" />
+      </tbody>
+      </table>
+    </div>
+  )
+}
+
+const Statistic = ({text, value, unit}) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value} {unit}</td>
+    </tr>
   )
 }
 
