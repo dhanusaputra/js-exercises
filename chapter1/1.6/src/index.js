@@ -17,6 +17,9 @@ const App = () => {
       <Display text="good" value={good} />
       <Display text="neutral" value={neutral} />
       <Display text="bad" value={bad} />
+      <Display text="all" value={good + neutral + bad} />
+      <Display text="average" value={good - bad / (good + neutral + bad)} />
+      <Display text="positive" value={100 * (good / (good + neutral + bad))} unit="%" />
     </div>
   )
 }
@@ -35,9 +38,9 @@ const Button = (props) => {
   )
 }
 
-const Display = ({text, value}) => {
+const Display = ({text, value, unit}) => {
   return (
-    <div>{text} {value}</div>
+    <div>{text} {value} {unit}</div>
   )
 }
 
