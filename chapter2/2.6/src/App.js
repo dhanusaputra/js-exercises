@@ -66,17 +66,14 @@ const App = () => {
   }
 
   const removePerson = (event) => {
-    personService
-      .get(event.target.value)
-      .then(person => {
-        if (window.confirm(`Delete ${person[0].name} ?`)) {
-          personService
-            .remove(person[0].id)
-            .then( () => {
-              setPersons(persons.filter(n => n.id !== person[0].id))
-            })
-        }
-      })
+    const deletedPerson = persons.find(person => person.id === event.target.value)
+    if (window.confirm(`Delete ${deletedPerson.name} ?`)) {
+      personService
+        .remove(deletedPerson.id)
+        .then( () => {
+          setPersons(persons.filter(person => person.id !== deletedPerson.id))
+        })
+    }
   }
 
   const personsToShow = filter.length === 0
