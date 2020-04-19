@@ -57,6 +57,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNotifMessage(['info',`Added ${personObject.name}`])
         })
+        .catch(error => {
+          console.log(error.response.data)
+          setNotifMessage(['error', `${error.response.data.error}`])
+        })
     }
     setNewName('')
     setNewNumber('')
