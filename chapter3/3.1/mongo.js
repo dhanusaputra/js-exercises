@@ -32,12 +32,12 @@ if (process.argv.length === 3) {
   })
 } else {
   const person = new Person({
-    name: name, 
-    date: new Date(), 
+    name: name,
+    date: new Date(),
     number: number,
   })
 
-  person.save().then(response => {
+  person.save().then(() => {
     console.log(`added ${name} number ${number} to phonebook`)
     mongoose.connection.close()
   })

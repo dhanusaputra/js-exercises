@@ -6,22 +6,22 @@ const Person = require('./models/person')
 
 const app = express()
 
-morgan.token('body', (req, res) => JSON.stringify(req.body))
+morgan.token('body', (req) => JSON.stringify(req.body))
 
 app
   .use(express.json())
   .use(cors())
   .use(express.static('build'))
   .use(morgan(function (tokens, req, res) {
-  return [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms',
-    tokens.body(req, res)
-  ].join(' ')
-}))
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'), '-',
+      tokens['response-time'](req, res), 'ms',
+      tokens.body(req, res)
+    ].join(' ')
+  }))
 
 app.get('/info', (req, res, next) => {
   Person.find({})
@@ -52,7 +52,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -65,7 +65,7 @@ app.post('/api/persons', (req, res, next) => {
     return res.status(400).json({
       error: 'missing number'
     })
-  } 
+  }
 
   const person = new Person({
     name: body.name,
@@ -98,10 +98,10 @@ app.put('/api/persons/:id', (req, res, next) => {
 const errorHandler = (error, req, res, next) => {
   console.error(error.message)
 
-  if(error.name === "CastError") {
-    return res.status(400).send({error:"mallformatted id"})
-  } else if(error.name === "ValidationError") {
-    return res.status(400).send({error:error.message})
+  if(error.name === 'CastError') {
+    return res.status(400).send({ error:'mallformatted id' })
+  } else if(error.name === 'ValidationError') {
+    return res.status(400).send({ error:error.message })
   }
 
   next(error)
