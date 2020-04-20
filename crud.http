@@ -6,10 +6,12 @@ GET http://localhost:3001/api/persons/1
 
 ###
 
-POST http://localhost:3001/api/persons
+POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-    "name": "D",
-    "number": "12345"
+    "title": "D",
+    "author": "12345",
+    "url": "aaa.com",
+    "like": 5
 }
