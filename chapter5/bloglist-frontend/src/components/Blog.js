@@ -12,21 +12,24 @@ const Blog = ({ blog, addLike, removeBlog }) => {
     marginBottom: 5,
   }
 
-  const showWhenVisible = { display: blogVisible ? '' : 'none' }
-
   const handleLike = () => {
     addLike({ ...blog, likes: blog.likes + 1 })
   }
 
+  if (!blogVisible) {
+    return (
+      <div style={blogStyle}>
+        <div>{blog.title} {blog.author} <button onClick={() => setBlogVisible(!blogVisible)}>view</button></div>
+      </div>
+    )
+  }
   return (
     <div style={blogStyle}>
-      <div>{blog.title} <button onClick={() => setBlogVisible(!blogVisible)}>view</button></div>
-      <div style={showWhenVisible}>
-        <div>{blog.url}</div>
-        <div>likes {blog.likes} <button onClick={handleLike}>like</button></div>
-        <div>{blog.author}</div>
-        <div><button onClick={() => removeBlog(blog)}>remove</button></div>
-      </div>
+      <div>{blog.title} {blog.author} <button onClick={() => setBlogVisible(!blogVisible)}>view</button></div>
+      <div>{blog.url}</div>
+      <div>likes {blog.likes} <button onClick={handleLike}>like</button></div>
+      <div>{blog.user.name}</div>
+      <div><button onClick={() => removeBlog(blog)}>remove</button></div>
     </div>
   )
 }
