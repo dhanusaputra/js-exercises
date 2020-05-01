@@ -4,6 +4,7 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const initialBlogs = [
   {
@@ -65,13 +66,19 @@ test('a valid blog can be added', async() => {
     author: 'q',
     url: 'aaa.com',
     likes: 5,
-    userId: user.body[0].id,
   }
+
+  const userForToken = {
+    username: user.body[0].username,
+    id: user.body[0].id,
+  }
+
+  const token = jwt.sign(userForToken, process.env.SECRET)
 
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI1ZWE1YjQ5MTcyNjgxYjBiZWVjMjE2MzEiLCJpYXQiOjE1ODc5MTc5OTB9.BR9qtqMJhrCetcotLG16C4-qG8cCGc5w1hUbIj2UiLU')
+    .set('Authorization', `bearer ${token}`)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
@@ -91,11 +98,18 @@ test('likes default value is 0', async() => {
     url: '123.com',
     userId: user.body[0].id,
   }
+  
+  const userForToken = {
+    username: user.body[0].username,
+    id: user.body[0].id,
+  }
+
+  const token = jwt.sign(userForToken, process.env.SECRET)
 
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI1ZWE1YjQ5MTcyNjgxYjBiZWVjMjE2MzEiLCJpYXQiOjE1ODc5MTc5OTB9.BR9qtqMJhrCetcotLG16C4-qG8cCGc5w1hUbIj2UiLU')
+    .set('Authorization', `bearer ${token}`)
     .expect(201)
     .expect('Content-Type',/application\/json/)
 
@@ -112,10 +126,17 @@ test('400 when url and title are missing', async() => {
     userId: user.body[0].id,
   }
 
+  const userForToken = {
+    username: user.body[0].username,
+    id: user.body[0].id,
+  }
+
+  const token = jwt.sign(userForToken, process.env.SECRET)
+
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .set('Authorization', 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI1ZWE1YjQ5MTcyNjgxYjBiZWVjMjE2MzEiLCJpYXQiOjE1ODc5MTc5OTB9.BR9qtqMJhrCetcotLG16C4-qG8cCGc5w1hUbIj2UiLU')
+    .set('Authorization', `bearer ${token}`)
     .expect(400)
 })
 
