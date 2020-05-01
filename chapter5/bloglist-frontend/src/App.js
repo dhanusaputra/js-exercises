@@ -14,10 +14,14 @@ const App = () => {
   const [user, setUser] = useState(null)
   const blogFormRef = React.createRef()
 
+  const sortedBlogsByLikes = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
+
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      setBlogs( blogs )
-    })  
+    const fetchBlogs = async () => {
+      const blogs = await blogService.getAll()
+      setBlogs( sortedBlogsByLikes(blogs) )
+    }
+    fetchBlogs()
   }, [])
 
   useEffect(() => {
@@ -64,7 +68,33 @@ const App = () => {
       setBlogs(blogs.concat(blog))
       setNotifMessage(['info', `a new blog ${blog.title} by ${blog.author} added`])
     } catch (exception) {
-      setNotifMessage(['error', exception])
+      setNotifMessage(['error', exception.response.data.error])
+    }
+    setTimeout(() => {
+      setNotifMessage(['info', null])
+    }, 5000)
+  }
+
+  const handleUpdate = async (blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(blogObject.id, blogObject)
+      setBlogs(sortedBlogsByLikes(blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog)))
+    } catch (exception) {
+      setNotifMessage(['error', exception.response.data.error])
+    }
+    setTimeout(() => {
+      setNotifMessage(['info', null])
+    }, 5000)
+  }
+
+  const handleRemove =  async (blogObject) => {
+    try {
+      if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`)) {
+        await blogService.remove(blogObject.id)
+        setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+      }
+    } catch (exception) {
+      setNotifMessage(['error', exception.response.data.error])
     }
     setTimeout(() => {
       setNotifMessage(['info', null])
@@ -100,7 +130,7 @@ const App = () => {
         <BlogForm createBlog={handleCreate} />  
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} addLike={handleUpdate} removeBlog={handleRemove}/>
       )}
     </>
   )

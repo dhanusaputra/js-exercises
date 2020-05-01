@@ -42,7 +42,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (blog.user) {
     if (!request.token || decodedToken.id !== blog.user.toString()) {
-      return response.status(403).json({ error: 'deletion not allowed' })
+      return response.status(403).json({ error: 'deletion by other is not allowed' })
     }
   }
   await Blog.findByIdAndRemove(request.params.id)
