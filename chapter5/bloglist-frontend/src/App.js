@@ -56,7 +56,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
+    window.localStorage.clear()
     blogService.setToken('')
     setUser(null)
   }
@@ -107,12 +107,12 @@ const App = () => {
       <Notification message={notifMessage} />
       <form onSubmit={handleLogin}>
         <div>
-          username<input type='text' value={username} name='Username' onChange={({ target }) => setUsername(target.value)}/>
+          username<input id='username' type='text' value={username} name='Username' onChange={({ target }) => setUsername(target.value)}/>
         </div>
         <div>
-          password<input type='text' value={password} name='Password' onChange={({ target }) => setPassword(target.value)}/>
+          password<input id='password' type='text' value={password} name='Password' onChange={({ target }) => setPassword(target.value)}/>
         </div>
-        <button type='submit'>login</button>
+        <button id='login-button' type='submit'>login</button>
       </form>
     </>
   )
@@ -126,12 +126,14 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={notifMessage} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-      <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+      <Togglable buttonId='create-new-blog-button' buttonLabel='create new blog' ref={blogFormRef}>
         <BlogForm createBlog={handleCreate} />
       </Togglable>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} addLike={handleUpdate} removeBlog={handleRemove}/>
-      )}
+      <div className='blogs'>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} addLike={handleUpdate} removeBlog={handleRemove}/>
+        )}
+      </div>
     </>
   )
 }
