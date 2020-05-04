@@ -18,7 +18,7 @@ const Anecdote = (props) => {
 
 const AnecdoteList = (props) => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
 
   return(
     <>
