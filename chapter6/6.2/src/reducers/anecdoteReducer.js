@@ -2,13 +2,12 @@ import anecdoteService from '../services/anecdotes'
 
 const reducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_VOTE': {
+    case 'ADD_VOTE': 
       return state.map(anecdote => anecdote.id !== action.data.id ? anecdote : action.data).sort((a, b) => b.votes - a.votes)
-    }
     case 'NEW_ANECDOTE': 
       return [...state, action.data]
     case 'INIT_ANECDOTES':
-      return action.data
+      return action.data.sort((a, b) => b.votes - a.votes)
   default:
    return state 
   }

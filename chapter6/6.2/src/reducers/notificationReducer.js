@@ -1,25 +1,31 @@
-const notificationReducer = (state = null, action) => {
+const initialNotification = {
+  content: null,
+  timeoutId: null,
+}
+
+const notificationReducer = (state = initialNotification, action) => {
   switch (action.type) {
-    case 'SET_NOTIFICATION':
-      return action.notification
+    case 'SET_NOTIFICATION': {
+      clearTimeout(state.timeoutId)
+      return action.data
+    }
     case 'REMOVE_NOTIFICATION': 
-      return null
+      return initialNotification
     default:
       return state
   }
 }
 
-export const changeNotification = (notification) => {
+export const changeNotification = (data) => {
   return {
     type: 'SET_NOTIFICATION',
-    notification,
+    data,
   }
 }
 
 export const removeNotification = () => {
   return {
     type: 'REMOVE_NOTIFICATION',
-    notification: null,
   }
 }
 
