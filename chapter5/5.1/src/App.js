@@ -5,8 +5,13 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { initializeBlogs } from './reducers/blogReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
+  const dispatch = useDispatch()
+  const blogsR = useSelector(state => state.blogs)
+
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -19,10 +24,10 @@ const App = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       const blogs = await blogService.getAll()
-      setBlogs( sortedBlogsByLikes(blogs) )
+      dispatch(initializeBlogs(sortedBlogsByLikes(blogs)))
     }
     fetchBlogs()
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -130,7 +135,7 @@ const App = () => {
         <BlogForm createBlog={handleCreate} />
       </Togglable>
       <div className='blogs'>
-        {blogs.map(blog =>
+        {blogsR.map(blog =>
           <Blog key={blog.id} blog={blog} addLike={handleUpdate} removeBlog={handleRemove}/>
         )}
       </div>
