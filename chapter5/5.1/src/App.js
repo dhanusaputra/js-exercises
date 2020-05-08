@@ -5,38 +5,54 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import { initializeBlogs } from './reducers/blogReducer'
+import userService from './services/users'
+import {
+  BrowserRouter as Router,
+  Switch, Route, Link,
+} from 'react-router-dom'
+
+import { initializeBlogs, createBlog, updateBlog, deleteBlog } from './reducers/blogReducer'
+import { setInfo, setError, resetNotification } from './reducers/notificationReducer'
+import { setUser, resetUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
   const dispatch = useDispatch()
-  const blogsR = useSelector(state => state.blogs)
+  const blogs = useSelector(state => state.blogs)
+  const notifMessage = useSelector(state => state.notification)
+  const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
 
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notifMessage, setNotifMessage] = useState(['info', null])
-  const [user, setUser] = useState(null)
   const blogFormRef = React.createRef()
 
-  const sortedBlogsByLikes = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
   useEffect(() => {
     const fetchBlogs = async () => {
       const blogs = await blogService.getAll()
-      dispatch(initializeBlogs(sortedBlogsByLikes(blogs)))
+      dispatch(initializeBlogs(blogs))
     }
     fetchBlogs()
+  }, [dispatch])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await userService.getAll()
+      dispatch(initializeUsers(users))
+    }
+    fetchUsers()
   }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -48,13 +64,13 @@ const App = () => {
         'loggedBlogAppUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setNotifMessage(['error', 'wrong username or password'])
+      dispatch(setError('wrong username or password'))
       setTimeout(() => {
-        setNotifMessage(['info', null])
+        dispatch(resetNotification())
       }, 5000)
     }
     console.log('logging in with', username, password)
@@ -63,32 +79,32 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear()
     blogService.setToken('')
-    setUser(null)
+    dispatch(resetUser())
   }
 
   const handleCreate = async (blogObject) => {
     try {
       blogFormRef.current.toggleVisibility()
       const blog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(blog))
-      setNotifMessage(['info', `a new blog ${blog.title} by ${blog.author} added`])
+      dispatch(createBlog(blog))
+      dispatch(setInfo(`a new blog ${blog.title} by ${blog.author} added`))
     } catch (exception) {
-      setNotifMessage(['error', exception.response.data.error])
+      dispatch(setError(exception.response.data.error))
     }
     setTimeout(() => {
-      setNotifMessage(['info', null])
+      dispatch(resetNotification())
     }, 5000)
   }
 
   const handleUpdate = async (blogObject) => {
     try {
-      const updatedBlog = await blogService.update(blogObject.id, blogObject)
-      setBlogs(sortedBlogsByLikes(blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog)))
+      await blogService.update(blogObject.id, blogObject)
+      dispatch(updateBlog(blogObject))
     } catch (exception) {
-      setNotifMessage(['error', exception.response.data.error])
+      dispatch(setError(exception.response.data.error))
     }
     setTimeout(() => {
-      setNotifMessage(['info', null])
+      dispatch(resetNotification())
     }, 5000)
   }
 
@@ -96,13 +112,13 @@ const App = () => {
     try {
       if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`)) {
         await blogService.remove(blogObject.id)
-        setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+        dispatch(deleteBlog(blogObject.id))
       }
     } catch (exception) {
-      setNotifMessage(['error', exception.response.data.error])
+      dispatch(setError(exception.response.data.error))
     }
     setTimeout(() => {
-      setNotifMessage(['info', null])
+      dispatch(resetNotification())
     }, 5000)
   }
 
@@ -127,19 +143,30 @@ const App = () => {
   }
 
   return (
-    <>
+    <Router>
       <h2>blogs</h2>
       <Notification message={notifMessage} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-      <Togglable buttonId='create-new-blog-button' buttonLabel='create new blog' ref={blogFormRef}>
-        <BlogForm createBlog={handleCreate} />
-      </Togglable>
-      <div className='blogs'>
-        {blogsR.map(blog =>
-          <Blog key={blog.id} blog={blog} addLike={handleUpdate} removeBlog={handleRemove}/>
-        )}
-      </div>
-    </>
+
+      <Switch>
+        <Route path='/users'>
+          <h2>Users</h2>
+          <div className='users'>
+          </div>
+        </Route>
+        <Route path='/'>
+          <Togglable buttonId='create-new-blog-button' buttonLabel='create new blog' ref={blogFormRef}>
+            <BlogForm createBlog={handleCreate} />
+          </Togglable>
+          <div className='blogs'>
+            {blogs.map(blog =>
+              <Blog key={blog.id} blog={blog} addLike={handleUpdate} removeBlog={handleRemove}/>
+            )}
+          </div>
+        </Route>
+      </Switch>
+
+    </Router>
   )
 }
 
