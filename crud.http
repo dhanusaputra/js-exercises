@@ -28,3 +28,19 @@ Content-Type: application/json
     "username": "admin",
     "password": "admin"
 }
+
+###
+
+POST http://localhost:3001/api/blogs/5ea52d8992d7d26603b09549/comments
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoYXJsaWUiLCJpZCI6IjVlYTUyZTE5OTJkN2QyNjYwM2IwOTU0YSIsImlhdCI6MTU4NzkxMjEyOH0.dSfaIOdf4Plp5Bg2w5e7MgpGatF35g5fnku-AnYooEE
+
+{
+    "title": "asjdaskf3",
+    "author": "12345",
+    "url": "aaa.com",
+    "likes": 10,
+    "comments": ["lul", "lulwide"]
+}
+
+###

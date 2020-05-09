@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Blog, BlogView } from './components/Blog'
+import { BlogView } from './components/Blog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
@@ -12,6 +12,7 @@ import {
   BrowserRouter as Router,
   Switch, Route, Link,
 } from 'react-router-dom'
+import { Table, Form, Button } from 'react-bootstrap'
 
 import { initializeBlogs, createBlog, updateBlog, deleteBlog } from './reducers/blogReducer'
 import { setInfo, setError, resetNotification } from './reducers/notificationReducer'
@@ -99,8 +100,8 @@ const App = () => {
 
   const handleUpdate = async (blogObject) => {
     try {
-      await blogService.update(blogObject.id, blogObject)
-      dispatch(updateBlog(blogObject))
+      const res = await blogService.update(blogObject.id, blogObject)
+      dispatch(updateBlog(res))
     } catch (exception) {
       dispatch(setError(exception.response.data.error))
     }
@@ -127,15 +128,15 @@ const App = () => {
     <>
       <h2>login to application</h2>
       <Notification message={notifMessage} />
-      <form onSubmit={handleLogin}>
-        <div>
-          username<input id='username' type='text' value={username} name='Username' onChange={({ target }) => setUsername(target.value)}/>
-        </div>
-        <div>
-          password<input id='password' type='text' value={password} name='Password' onChange={({ target }) => setPassword(target.value)}/>
-        </div>
-        <button id='login-button' type='submit'>login</button>
-      </form>
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>username</Form.Label>
+          <Form.Control id='username' type='text' value={username} name='Username' onChange={({ target }) => setUsername(target.value)}/>
+          <Form.Label> password</Form.Label>
+          <Form.Control id='password' type='text' value={password} name='Password' onChange={({ target }) => setPassword(target.value)}/>
+          <Button variane='primary' id='login-button' type='submit'>login</Button>
+        </Form.Group>
+      </Form>
     </>
   )
 
@@ -146,36 +147,49 @@ const App = () => {
   const padding = { padding: 5 }
 
   return (
-    <Router>
-      <Link style={padding} to='/'>blogs</Link>
-      <Link style={padding} to='/users'>users</Link>
-      <span style={padding}>{user.name} logged in <button onClick={handleLogout}>logout</button></span>
-      <h2>blog app</h2>
-      <Notification message={notifMessage} />
+    <div className='container'>
+      <Router>
+        <Link style={padding} to='/'>blogs</Link>
+        <Link style={padding} to='/users'>users</Link>
+        <span style={padding}>{user.name} logged in <button onClick={handleLogout}>logout</button></span>
+        <h2>blog app</h2>
+        <Notification message={notifMessage} />
 
-      <Switch>
-        <Route path='/blogs/:id'>
-          <BlogView blogs={blogs} addLike={handleUpdate} removeBlog={handleRemove}/>
-        </Route>
-        <Route path='/users/:id'>
-          <User users={users} />
-        </Route>
-        <Route path='/users'>
-          <Users users={users} />
-        </Route>
-        <Route path='/'>
-          <Togglable buttonId='create-new-blog-button' buttonLabel='create new blog' ref={blogFormRef}>
-            <BlogForm createBlog={handleCreate} />
-          </Togglable>
-          <div className='blogs'>
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog}/>
-            )}
-          </div>
-        </Route>
-      </Switch>
+        <Switch>
+          <Route path='/blogs/:id'>
+            <BlogView blogs={blogs} addLike={handleUpdate} removeBlog={handleRemove} addComment={handleUpdate} />
+          </Route>
+          <Route path='/users/:id'>
+            <User users={users} />
+          </Route>
+          <Route path='/users'>
+            <Users users={users} />
+          </Route>
+          <Route path='/'>
+            <Togglable buttonId='create-new-blog-button' buttonLabel='create new blog' ref={blogFormRef}>
+              <BlogForm createBlog={handleCreate} />
+            </Togglable>
+            <div className='blogs'>
+              <Table striped>
+                <tbody>
+                  {blogs.map(blog =>
+                    <tr key={blog.id}>
+                      <td>
+                        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                      </td>
+                      <td>
+                        {blog.author}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </div>
+          </Route>
+        </Switch>
 
-    </Router>
+      </Router>
+    </div>
   )
 }
 

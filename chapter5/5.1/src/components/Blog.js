@@ -1,24 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 
-const Blog = ({ blog }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
-
-  return (
-    <div style={blogStyle}>
-      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-    </div>
-  )
-}
-
-const BlogView = ({ blogs, addLike, removeBlog }) => {
+const BlogView = ({ blogs, addLike, removeBlog, addComment }) => {
   const id = useParams().id
   const blog = blogs.find(blog => blog.id === id)
   const history = useHistory()
@@ -32,6 +15,12 @@ const BlogView = ({ blogs, addLike, removeBlog }) => {
     history.push('/')
   }
 
+  const handleComment = (event) => {
+    event.preventDefault()
+    addComment({ ...blog, comments: blog.comments.concat({ comment: event.target.comment.value }) })
+    event.target.comment.value = ''
+  }
+
   if (!blog){
     return null
   }
@@ -43,12 +32,18 @@ const BlogView = ({ blogs, addLike, removeBlog }) => {
       <div>likes <span data-cy='likes'>{blog.likes}</span> <button onClick={handleLike}>like</button></div>
       <div>added by {blog.user.name}</div>
       <div><button onClick={handleRemove}>remove</button></div>
+      <h3>comments</h3>
+      <form onSubmit={handleComment}>
+        <input type='text' name='comment'/>
+        <button>add comment</button>
+      </form>
+      <ul>
+        {blog.comments.map(comment =>
+          <li key={comment._id}>{comment.comment}</li>
+        )}
+      </ul>
     </div>
   )
 }
 
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-}
-
-export { Blog, BlogView }
+export { BlogView }
