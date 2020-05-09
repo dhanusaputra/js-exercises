@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import { Blog, BlogView } from './components/Blog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
+import Users from './components/Users'
+import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import userService from './services/users'
+import usersService from './services/users'
 import {
   BrowserRouter as Router,
   Switch, Route, Link,
@@ -28,7 +30,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const blogFormRef = React.createRef()
 
-
   useEffect(() => {
     const fetchBlogs = async () => {
       const blogs = await blogService.getAll()
@@ -39,7 +40,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const users = await userService.getAll()
+      const users = await usersService.getAll()
       dispatch(initializeUsers(users))
     }
     fetchUsers()
@@ -142,17 +143,25 @@ const App = () => {
     return loginForm()
   }
 
+  const padding = { padding: 5 }
+
   return (
     <Router>
-      <h2>blogs</h2>
+      <Link style={padding} to='/'>blogs</Link>
+      <Link style={padding} to='/users'>users</Link>
+      <span style={padding}>{user.name} logged in <button onClick={handleLogout}>logout</button></span>
+      <h2>blog app</h2>
       <Notification message={notifMessage} />
-      <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
 
       <Switch>
+        <Route path='/blogs/:id'>
+          <BlogView blogs={blogs} addLike={handleUpdate} removeBlog={handleRemove}/>
+        </Route>
+        <Route path='/users/:id'>
+          <User users={users} />
+        </Route>
         <Route path='/users'>
-          <h2>Users</h2>
-          <div className='users'>
-          </div>
+          <Users users={users} />
         </Route>
         <Route path='/'>
           <Togglable buttonId='create-new-blog-button' buttonLabel='create new blog' ref={blogFormRef}>
@@ -160,7 +169,7 @@ const App = () => {
           </Togglable>
           <div className='blogs'>
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} addLike={handleUpdate} removeBlog={handleRemove}/>
+              <Blog key={blog.id} blog={blog}/>
             )}
           </div>
         </Route>
