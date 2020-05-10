@@ -8,6 +8,9 @@ const blogReducer = (state = [], action) => {
     return state.map(blog => blog.id === action.data.id ? action.data :  blog).sort((a, b) => b.likes - a.likes)
   case 'REMOVE_BLOG':
     return state.filter(blog => blog.id !== action.data)
+  case 'NEW_COMMENT':{
+    return state.map(blog => blog.id === action.data.blog ? { ...blog, comments: blog.comments.concat(action.data) } : blog)
+  }
   default:
     return state
   }
@@ -38,6 +41,13 @@ export const updateBlog = (blog) => {
   return {
     type: 'UPDATE_BLOG',
     data: blog,
+  }
+}
+
+export const createComment = (comment) => {
+  return {
+    type: 'NEW_COMMENT',
+    data: comment,
   }
 }
 

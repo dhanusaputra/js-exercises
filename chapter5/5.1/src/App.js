@@ -14,7 +14,7 @@ import {
 } from 'react-router-dom'
 import { Table, Form, Button } from 'react-bootstrap'
 
-import { initializeBlogs, createBlog, updateBlog, deleteBlog } from './reducers/blogReducer'
+import { initializeBlogs, createBlog, updateBlog, deleteBlog, createComment } from './reducers/blogReducer'
 import { setInfo, setError, resetNotification } from './reducers/notificationReducer'
 import { setUser, resetUser } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
@@ -110,6 +110,18 @@ const App = () => {
     }, 5000)
   }
 
+  const handleComment = async (blogId, commentObject) => {
+    try {
+      const res = await blogService.createComment(blogId, commentObject)
+      dispatch(createComment(res))
+    } catch (exception) {
+      dispatch(setError(exception))
+    }
+    setTimeout(() => {
+      dispatch(resetNotification())
+    }, 5000)
+  }
+
   const handleRemove =  async (blogObject) => {
     try {
       if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`)) {
@@ -157,7 +169,7 @@ const App = () => {
 
         <Switch>
           <Route path='/blogs/:id'>
-            <BlogView blogs={blogs} addLike={handleUpdate} removeBlog={handleRemove} addComment={handleUpdate} />
+            <BlogView blogs={blogs} addLike={handleUpdate} removeBlog={handleRemove} addComment={handleComment} />
           </Route>
           <Route path='/users/:id'>
             <User users={users} />

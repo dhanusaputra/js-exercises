@@ -15,8 +15,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoY
     "title": "asjdaskf3",
     "author": "12345",
     "url": "aaa.com",
-    "likes": 10,
-    "userId": "5ea52e1992d7d26603b0954a"
+    "likes": 10
 }
 
 ###
@@ -31,16 +30,11 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3001/api/blogs/5ea52d8992d7d26603b09549/comments
+POST http://localhost:3001/api/blogs/5ea5a4e43681df774a670cf8/comments
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNoYXJsaWUiLCJpZCI6IjVlYTUyZTE5OTJkN2QyNjYwM2IwOTU0YSIsImlhdCI6MTU4NzkxMjEyOH0.dSfaIOdf4Plp5Bg2w5e7MgpGatF35g5fnku-AnYooEE
 
 {
-    "title": "asjdaskf3",
-    "author": "12345",
-    "url": "aaa.com",
-    "likes": 10,
-    "comments": ["lul", "lulwide"]
+    "content": "lulwide"
 }
 
 ###

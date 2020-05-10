@@ -17,7 +17,7 @@ const BlogView = ({ blogs, addLike, removeBlog, addComment }) => {
 
   const handleComment = (event) => {
     event.preventDefault()
-    addComment({ ...blog, comments: blog.comments.concat({ comment: event.target.comment.value }) })
+    addComment(blog.id, { content: event.target.comment.value })
     event.target.comment.value = ''
   }
 
@@ -39,7 +39,7 @@ const BlogView = ({ blogs, addLike, removeBlog, addComment }) => {
       </form>
       <ul>
         {blog.comments.map(comment =>
-          <li key={comment._id}>{comment.comment}</li>
+          <li key={comment.id}>{comment.content}</li>
         )}
       </ul>
     </div>
