@@ -13,11 +13,7 @@ const Authors = (props) => {
     }
   }, [result.data])
 
-  if (!props.show) {
-    return null
-  }
-
-  if (result.loading) {
+  if (!props.show || result.loading) {
     return null
   }
 
