@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
+import Recommendations from './components/Recommendations'
 import { useApolloClient } from '@apollo/client'
 
 const App = () => {
@@ -20,12 +21,20 @@ const App = () => {
   const showWhenLogin = { display: token ? '' : 'none' }
   const hideWhenLogin = { display: token ? 'none' : '' }
 
+  useEffect(() => {
+    const token = window.localStorage.getItem('books-user-token')
+    if (token) {
+      setToken(token)
+    }
+  }, [])
+
   return (
     <div>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button style={showWhenLogin} onClick={() => setPage('add')}>add book</button>
+        <button style={showWhenLogin} onClick={() => setPage('recommend')}>recommend</button>
         <button style={hideWhenLogin} onClick={() => setPage('login')}>login</button>
         <button style={showWhenLogin} onClick={logout}>logout</button>
       </div>
@@ -38,8 +47,13 @@ const App = () => {
         show={page === 'books'}
       />
 
+      <Recommendations
+        show={page === 'recommend'}
+      />
+
       <NewBook
         show={page === 'add'}
+        setError={setErrorMessage}
       />
 
       <LoginForm

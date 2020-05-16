@@ -1,30 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
+import { ALL_BOOKS, ME } from '../queries'
 
-const Books = (props) => {
+const Recommendations = (props) => {
   const result = useQuery(ALL_BOOKS)
+  const resultMe = useQuery(ME)
   const [books, setBooks] = useState([])
-  const [genre, setGenre] = useState('')
-  const [genres, setGenres] = useState([])
+  const [favoriteGenre, setFavoriteGenre] = useState('')
 
   useEffect(() => {
     if (result.data) {
       setBooks(result.data.allBooks)
-      setGenres([...new Set(result.data.allBooks.map(b => b.genres).reduce((flat, next) => flat.concat(next), []))])
     }
   }, [result.data])
 
-  if (!props.show || result.loading) {
+  useEffect(() => {
+    if (resultMe.data) {
+      setFavoriteGenre(resultMe.data.me.favoriteGenre)
+    }
+  }, [resultMe.data])
+
+  if (!props.show || result.loading || resultMe.loading) {
     return null
   }
 
-  const booksToShow = genre ? books.filter(b => b.genres.includes(genre)) : books
+  const booksToShow = favoriteGenre ? books.filter(b => b.genres.includes(favoriteGenre)) : books
 
   return (
     <div>
-      <h2>books</h2>
-      {genre && <p>in genre <b>{genre}</b></p>}
+      <h2>recommendations</h2>
+      {favoriteGenre && <p>books in your favorite genre <b>{favoriteGenre}</b></p>}
       <table>
         <tbody>
           <tr>
@@ -45,11 +50,8 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
-    {genres.map(g =>
-      <button key={g} onClick={() => setGenre(g)}>{g}</button>
-    )}
     </div>
   )
 }
 
-export default Books
+export default Recommendations

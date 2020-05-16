@@ -9,8 +9,6 @@ const LoginForm = (props) => {
   const [ login, result ] = useMutation(LOGIN, {
     onError: (error) => {
       props.setError(error.graphQLErrors[0].message)
-      setUsername('')
-      setPassword('')
     }
   })
 
@@ -25,6 +23,8 @@ const LoginForm = (props) => {
   const submit =  async (event) => {
     event.preventDefault()
     login({ variables: {username, password} })
+    setUsername('')
+    setPassword('')
   }
 
   if (!props.show) {
