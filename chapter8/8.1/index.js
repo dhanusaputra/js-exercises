@@ -6,6 +6,8 @@ const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
@@ -77,6 +79,10 @@ const typeDefs = gql`
     allAuthors: [Author!]!
     me: User
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 const resolvers = {
@@ -99,6 +105,12 @@ const resolvers = {
     },
   },
 
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    },
+  },
+
   Mutation: {
     addBook: async (root, args, context) => {
       let author = await Author.findOne({ name: args.author })
@@ -107,7 +119,7 @@ const resolvers = {
         throw new AuthenticationError("not authenticated")
       }
       if (!author) {
-        author = new Author({ name: args.author, born: null })
+        author = new Author({ name: args.author, born: null, bookCount: 1 })
         try {
           await author.save()
         } catch (error) {
@@ -124,6 +136,7 @@ const resolvers = {
           invalidArgs: args,
         })
       }
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
       return book
     },
     editAuthor: async (root, args, context) => {
@@ -183,6 +196,7 @@ const server = new ApolloServer({
   },
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
