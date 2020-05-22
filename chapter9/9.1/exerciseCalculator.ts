@@ -8,8 +8,7 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (args: Array<number>) : Result => {
-  const target: number = 2;
+export const calculateExercises = (args: Array<number>, target: number) : Result => {
   const average: number = args.reduce((acc, cur) => acc + cur, 0) / args.length;
   let rating: number, ratingDescription: string;
 
@@ -36,7 +35,7 @@ const calculateExercises = (args: Array<number>) : Result => {
     ratingDescription: ratingDescription,
     target: target,
     average: average,
-  }
-}
+  };
+};
 
-console.log(calculateExercises(process.argv.slice(2).map(Number)))
+// console.log(calculateExercises(process.argv.slice(2).map(Number)));

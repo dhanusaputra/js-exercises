@@ -1,4 +1,4 @@
-const calculateBMI = (h: number, w: number) : string => {
+export const calculateBMI = (h: number, w: number) : string => {
   switch(true) {
   case w/Math.pow(h*0.01, 2) < 15:
     return 'Very severely underweight';
@@ -19,13 +19,13 @@ const calculateBMI = (h: number, w: number) : string => {
   default:
     throw new Error('invalid argument');
   }
-}
+};
 
-const h: number = Number(process.argv[2])
-const w: number = Number(process.argv[3])
+// const h: number = Number(process.argv[2])
+// const w: number = Number(process.argv[3])
 
-try {
-  console.log(calculateBMI(h, w))
-} catch (e) {
-  console.log('Something went wrong, error message: ', e.message);
-}
+// try {
+//   console.log(calculateBMI(h, w))
+// } catch (e) {
+//   console.log('Something went wrong, error message: ', e.message);
+// }
