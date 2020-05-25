@@ -10,6 +10,12 @@ export enum Gender {
   Other = "other"
 }
 
+export enum GenderIcon {
+  Mars = "mars",
+  Venus = "venus",
+  Genderless = "genderless"
+}
+
 export interface Patient {
   id: string;
   name: string;

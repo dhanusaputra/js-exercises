@@ -1,11 +1,15 @@
 import patientData from '../../data/patients.json';
-import { PatientEntry, NonSensitivePatientEntry, NewPatientEntry } from '../types';
+import { PatientEntry, NonSensitivePatientEntry, NewPatientEntry, Patient } from '../types';
 import { v1 as uuid } from 'uuid';
 
 const patients: Array<PatientEntry> = patientData as Array<PatientEntry>;
 
 const getEntries = (): Array<PatientEntry> => {
   return patients;
+};
+
+const getEntryById = (id: number): Patient => {
+  return { ...patients.find(p => p.id === id), entries: [] };
 };
 
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
@@ -32,4 +36,5 @@ export default {
   getEntries,
   getNonSensitiveEntries,
   addPatient,
+  getEntryById,
 };
