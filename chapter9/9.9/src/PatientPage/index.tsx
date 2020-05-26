@@ -1,9 +1,9 @@
 import React from "react";
 import {  Header, Card, List } from "semantic-ui-react";
 import { useParams } from "react-router-dom";
-import { Icon } from "semantic-ui-react";
+import { Icon, SemanticCOLORS } from "semantic-ui-react";
 
-import { Patient, Entry } from "../types";
+import { Patient, Entry, HealthCheckRating } from "../types";
 import { useStateValue } from "../state";
 
 const PatientPage: React.FC = () => {
@@ -30,6 +30,19 @@ const assertNever = (value: never): never => {
   throw new Error(
     `Unhandled discriminated union member: ${JSON.stringify(value)}`
   );
+};
+
+const healthCheckColor = (rating: HealthCheckRating): SemanticCOLORS => {
+  switch (rating) {
+    case 0:
+      return "green";
+    case 1:
+      return "yellow";
+    case 2:
+      return "orange";
+    default:
+      return "red";
+  }
 };
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
@@ -67,6 +80,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
             <List bulleted>
               {entry.diagnosisCodes?.map(diagnosisCode => <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>)} 
             </List>
+            <Icon name='heart' color={healthCheckColor(entry.healthCheckRating)} />
           </Card.Content>
         </Card>
       );

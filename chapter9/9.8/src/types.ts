@@ -56,10 +56,17 @@ interface HealthCheckEntry extends BaseEntry {
 
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
+  employerName: string;
 }
 
 interface HospitalEntry extends BaseEntry {
   type: "Hospital";
+  discharge: Discharge;
+}
+
+interface Discharge {
+  date: string;
+  criteria: string;
 }
 
 export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>;
