@@ -11,6 +11,7 @@ export interface PatientEntry {
   ssn: string;
   gender: Gender;
   occupation: string;
+  entries: Entry[];
 }
 
 export enum Gender {
@@ -26,7 +27,7 @@ export interface Patient {
   occupation: string;
   gender: Gender;
   dateOfBirth: string;
-  entries: Entry[]
+  entries: Entry[];
 }
 
 export type Entry =

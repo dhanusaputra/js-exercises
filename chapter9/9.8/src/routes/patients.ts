@@ -18,6 +18,16 @@ router.get('/:id', (req, res) => {
   }
 });
 
+router.get('/:id/entries',(req, res) => {
+  const entry = patientService.getEntryOnlyById(req.params.id);
+
+  if (entry) {
+    res.send(entry);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
 router.post('/', (req, res) => {
   try {
     const newPatientEntry = toNewPatientEntry(req.body);
