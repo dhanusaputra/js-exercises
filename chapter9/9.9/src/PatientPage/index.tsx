@@ -3,7 +3,7 @@ import {  Header, Card, List } from "semantic-ui-react";
 import { useParams } from "react-router-dom";
 import { Icon, SemanticCOLORS } from "semantic-ui-react";
 
-import { Patient, Entry, HealthCheckRating } from "../types";
+import { Patient, Entry, HealthCheckRating, Diagnosis } from "../types";
 import { useStateValue } from "../state";
 
 const PatientPage: React.FC = () => {
@@ -46,6 +46,9 @@ const healthCheckColor = (rating: HealthCheckRating): SemanticCOLORS => {
 };
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
+  const [{ diagnoses }] = useStateValue();
+  const diagnosesEntry: Diagnosis[] = Object.values(diagnoses).filter(diagnosis => entry.diagnosisCodes?.includes(diagnosis.code));
+
   switch (entry.type) {
     case "Hospital":
       return (
@@ -54,7 +57,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
             <Card.Header>{entry.date} <Icon name='medkit' size='large' /></Card.Header> 
             <Card.Description>{entry.description} </Card.Description>
             <List bulleted>
-              {entry.diagnosisCodes?.map(diagnosisCode => <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>)} 
+              {diagnosesEntry.map(diagnosis => <List.Item key={diagnosis.code}>{diagnosis.code} {diagnosis.name}</List.Item>)} 
             </List>
           </Card.Content>
         </Card>
@@ -66,7 +69,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
             <Card.Header>{entry.date} <Icon name='stethoscope' size='large' /> {entry.employerName}</Card.Header>
             <Card.Description>{entry.description}</Card.Description>
             <List bulleted>
-              {entry.diagnosisCodes?.map(diagnosisCode => <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>)} 
+              {diagnosesEntry.map(diagnosis => <List.Item key={diagnosis.code}>{diagnosis.code} {diagnosis.name}</List.Item>)} 
             </List>
           </Card.Content>
         </Card>
@@ -78,7 +81,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
             <Card.Header>{entry.date} <Icon name='doctor' size='large' /></Card.Header>
             <Card.Description>{entry.description}</Card.Description>
             <List bulleted>
-              {entry.diagnosisCodes?.map(diagnosisCode => <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>)} 
+              {diagnosesEntry.map(diagnosis => <List.Item key={diagnosis.code}>{diagnosis.code} {diagnosis.name}</List.Item>)} 
             </List>
             <Icon name='heart' color={healthCheckColor(entry.healthCheckRating)} />
           </Card.Content>
