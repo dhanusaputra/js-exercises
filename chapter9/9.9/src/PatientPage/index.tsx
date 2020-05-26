@@ -1,5 +1,5 @@
 import React from "react";
-import {  Header } from "semantic-ui-react";
+import {  Header, Card, List } from "semantic-ui-react";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 
@@ -36,24 +36,40 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   switch (entry.type) {
     case "Hospital":
       return (
-        <div>
-          {entry.date} {entry.description} 
-          <ul>
-            {entry.diagnosisCodes?.map(diagnosisCode => <li key={diagnosisCode}>{diagnosisCode}</li>)} 
-          </ul>
-        </div>
+        <Card fluid>
+          <Card.Content>
+            <Card.Header>{entry.date} <Icon name='medkit' size='large' /></Card.Header> 
+            <Card.Description>{entry.description} </Card.Description>
+            <List bulleted>
+              {entry.diagnosisCodes?.map(diagnosisCode => <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>)} 
+            </List>
+          </Card.Content>
+        </Card>
       );
     case "OccupationalHealthcare":
       return (
-        <div>
-          {entry.date} {entry.description} 
-          <ul>
-            {entry.diagnosisCodes?.map(diagnosisCode => <li key={diagnosisCode}>{diagnosisCode}</li>)} 
-          </ul>
-        </div>
+        <Card fluid>
+          <Card.Content>
+            <Card.Header>{entry.date} <Icon name='stethoscope' size='large' /> {entry.employerName}</Card.Header>
+            <Card.Description>{entry.description}</Card.Description>
+            <List bulleted>
+              {entry.diagnosisCodes?.map(diagnosisCode => <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>)} 
+            </List>
+          </Card.Content>
+        </Card>
       );
     case "HealthCheck":
-      return (<div>{entry.date} {entry.description}</div>);
+      return (
+        <Card fluid>
+          <Card.Content>
+            <Card.Header>{entry.date} <Icon name='doctor' size='large' /></Card.Header>
+            <Card.Description>{entry.description}</Card.Description>
+            <List bulleted>
+              {entry.diagnosisCodes?.map(diagnosisCode => <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>)} 
+            </List>
+          </Card.Content>
+        </Card>
+      );
     default:
       return assertNever(entry);
   }

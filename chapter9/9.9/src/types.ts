@@ -47,8 +47,15 @@ interface HealthCheckEntry extends BaseEntry {
 
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
+  employerName: string;
+}
+
+interface Discharge {
+  date: string;
+  criteria: string;
 }
 
 interface HospitalEntry extends BaseEntry {
   type: "Hospital";
+  discharge: Discharge;
 }
