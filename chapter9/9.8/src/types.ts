@@ -19,11 +19,6 @@ export enum Gender {
   Other = 'other',
 }
 
-export type Entry =
-  | HospitalEntry
-  | OccupationalHealthcareEntry
-  | HealthCheckEntry;
-
 export interface Patient {
   id: string;
   name: string;
@@ -33,6 +28,11 @@ export interface Patient {
   dateOfBirth: string;
   entries: Entry[]
 }
+
+export type Entry =
+  | HospitalEntry
+  | OccupationalHealthcareEntry
+  | HealthCheckEntry;
 
 interface BaseEntry {
   id: string;
