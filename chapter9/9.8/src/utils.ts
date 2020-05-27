@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatientEntry, Gender, NewEntry, HealthCheckRating } from './types';
+import { NewPatientEntry, Gender, NewEntry, HealthCheckRating, Discharge } from './types';
 
 const assertNever = (value: never): never => {
   throw new Error(
@@ -44,11 +44,18 @@ export const toNewEntry = (object: NewEntry): NewEntry => {
         specialist: parseString(object.specialist, 'specialist'),
         diagnosisCodes: object.diagnosisCodes,
         type: object.type,
-        discharge: object.discharge,
+        discharge: parseDischarge(object.discharge),
       };
     default:
       return assertNever(object);
   }
+};
+
+const parseDischarge = (object: Discharge): Discharge => {
+  return {
+    date: parseDate(object.date),
+    criteria: parseString(object.criteria),
+  };
 };
 
 const isString = (text: any): text is string => {
