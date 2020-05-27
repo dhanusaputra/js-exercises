@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatientEntry, Gender } from './types';
+import { NewPatientEntry, Gender, NewEntry, HealthCheckRating } from './types';
 
-const toNewPatientEntry = (object: NewPatientEntry): NewPatientEntry => {
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
+export const toNewPatientEntry = (object: NewPatientEntry): NewPatientEntry => {
   return {
     name: parseString(object.name, 'name'),
     dateOfBirth: parseDate(object.dateOfBirth),
@@ -9,6 +15,40 @@ const toNewPatientEntry = (object: NewPatientEntry): NewPatientEntry => {
     occupation: parseString(object.occupation, 'occupation'),
     gender: parseGender(object.gender),
   };
+};
+
+export const toNewEntry = (object: NewEntry): NewEntry => {
+  switch (object.type) {
+    case "HealthCheck":
+      return {
+        description: parseString(object.description, 'description'),
+        date: parseDate(object.date),
+        specialist: parseString(object.specialist, 'specialist'),
+        diagnosisCodes: object.diagnosisCodes,
+        type: object.type,
+        healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
+      };
+    case "OccupationalHealthcare":
+      return {
+        description: parseString(object.description, 'description'),
+        date: parseDate(object.date),
+        specialist: parseString(object.specialist, 'specialist'),
+        diagnosisCodes: object.diagnosisCodes,
+        type: object.type,
+        employerName: parseString(object.employerName, 'employerName'),
+      };
+    case "Hospital":
+      return {
+        description: parseString(object.description, 'description'),
+        date: parseDate(object.date),
+        specialist: parseString(object.specialist, 'specialist'),
+        diagnosisCodes: object.diagnosisCodes,
+        type: object.type,
+        discharge: object.discharge,
+      };
+    default:
+      return assertNever(object);
+  }
 };
 
 const isString = (text: any): text is string => {
@@ -27,7 +67,7 @@ const isDate = (date: string): boolean => {
 };
 
 const parseDate = (date: any): string => {
-  if (!date || !isString(date) || !isDate(date)) {
+  if  (!date || !isString(date) || !isDate(date)) {
     throw new Error(`Incorrect or missing date: ${date as string}`);
   }
   return date;
@@ -44,4 +84,13 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
-export default toNewPatientEntry;
+const isHealthCheckRating = (param: any): param is HealthCheckRating => {
+  return Object.values(HealthCheckRating).includes(param);
+};
+
+const parseHealthCheckRating = (param: any): HealthCheckRating => {
+  if (!param || !isHealthCheckRating(param)) {
+    throw new Error(`Incorrect or missing healthCheckRating`);
+  } 
+  return param;
+};
