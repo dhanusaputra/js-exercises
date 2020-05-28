@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import {  Header, Card, List } from "semantic-ui-react";
 import { useParams } from "react-router-dom";
-import { Icon, SemanticCOLORS, Button } from "semantic-ui-react";
+import { Icon, SemanticCOLORS, Button, Grid } from "semantic-ui-react";
 
 import { Patient, Entry, NewEntry, HealthCheckRating, Diagnosis } from "../types";
 import { useStateValue, updatePatient } from "../state";
@@ -11,6 +11,7 @@ import { apiBaseUrl } from "../constants";
 
 const PatientPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [modalType, setModalType] = React.useState<NewEntry['type']>("HealthCheck");
   const [error, setError] = React.useState<string | undefined>();
 
   const { id } = useParams<{ id: string }>();
@@ -24,6 +25,7 @@ const PatientPage: React.FC = () => {
   const openModal = (): void => setModalOpen(true);
 
   const closeModal = (): void => {
+
     setModalOpen(false);
     setError(undefined);
   };
@@ -57,8 +59,15 @@ const PatientPage: React.FC = () => {
             onSubmit={submitNewEntry}
             error={error}
             onClose={closeModal}
+            modalType={modalType}
           />
-          <Button onClick={() => openModal()}>Add New Entry</Button>
+          <Grid>
+            <Grid.Column textAlign="center">
+              <Button onClick={() => {openModal(); setModalType("Hospital");}}>Add New Hospital Entry</Button>
+              <Button onClick={() => {openModal(); setModalType("OccupationalHealthcare");}}>Add New Occupational Healthcare Entry</Button>
+              <Button onClick={() => {openModal(); setModalType("HealthCheck");}}>Add New Health Check Entry</Button>
+            </Grid.Column>
+          </Grid>
         </div>
       }
     </div>
