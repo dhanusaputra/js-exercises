@@ -54,7 +54,7 @@ export const toNewEntry = (object: NewEntry): NewEntry => {
 const parseDischarge = (object: Discharge): Discharge => {
   return {
     date: parseDate(object.date),
-    criteria: parseString(object.criteria),
+    criteria: parseString(object.criteria, 'criteria'),
   };
 };
 
