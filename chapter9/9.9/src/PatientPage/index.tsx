@@ -10,13 +10,16 @@ import AddEntryModal from "../AddEntryModal";
 import { apiBaseUrl } from "../constants";
 
 const PatientPage: React.FC = () => {
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
   const { id } = useParams<{ id: string }>();
   const [{ patients }, dispatch] = useStateValue();
 
   const patient: Patient | undefined = Object.values(patients).find(p => p.id === id);
-
-  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>();
+  if (!patient) {
+    return null;
+  }
 
   const openModal = (): void => setModalOpen(true);
 
@@ -31,7 +34,8 @@ const PatientPage: React.FC = () => {
         `${apiBaseUrl}/patients/${id}/entries`,
         values
       );
-      dispatch(updatePatient(newEntry));
+      const updatedPatient = { ...patient, entries: [ ...patient.entries, newEntry ] };
+      dispatch(updatePatient(updatedPatient));
       closeModal();
     } catch (e) {
       console.error(e.response.data);
