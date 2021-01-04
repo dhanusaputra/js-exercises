@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
+
+import Text from './Text';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +30,7 @@ const styles = StyleSheet.create({
 
   // body
   bodyContainer: {
+    paddingTop: 10,
     flexDirection: 'row',
     flexGrow: 1,
   },
@@ -53,9 +56,9 @@ const RepositoryItemHeader = ({ item }) => (
         />
       </View>
       <View style={styles.headerInfoContainer}>
-        <Text>{item.fullName}</Text>
-        <Text>{item.description}</Text>
-        <Text>{item.language}</Text>
+        <Text fontWeight='bold'>{item.fullName}</Text>
+        <Text color='secondary'>{item.description}</Text>
+        <Text style={{ alignSelf: 'flex-start', padding: 5, borderRadius: 5, backgroundColor: '#0366d6', color: 'white' }}>{item.language}</Text>
       </View>
     </View>
 );
@@ -63,20 +66,20 @@ const RepositoryItemHeader = ({ item }) => (
 const RepositoryItemBody= ({ item }) => (
   <View style={styles.bodyContainer}>
     <View style={styles.bodyItemContainer}>
-      <Text>{formatCount(item.stargazersCount)}</Text>
-      <Text>Stars</Text>
+      <Text fontWeight='bold'>{formatCount(item.stargazersCount)}</Text>
+      <Text color='secondary'>Stars</Text>
     </View>
     <View style={styles.bodyItemContainer}>
-      <Text>{formatCount(item.forksCount)}</Text>
-      <Text>Forks</Text>
+      <Text fontWeight='bold'>{formatCount(item.forksCount)}</Text>
+      <Text color='secondary'>Forks</Text>
     </View>
     <View style={styles.bodyItemContainer}>
-      <Text>{formatCount(item.reviewCount)}</Text>
-      <Text>Reviews</Text>
+      <Text fontWeight='bold'>{formatCount(item.reviewCount)}</Text>
+      <Text color='secondary'>Reviews</Text>
     </View>
     <View style={styles.bodyItemContainer}>
-      <Text>{item.ratingAverage}</Text>
-      <Text>Rating</Text>
+      <Text fontWeight='bold'>{item.ratingAverage}</Text>
+      <Text color='secondary'>Rating</Text>
     </View>
   </View>
 );
