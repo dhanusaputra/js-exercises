@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
 import FormikTextInput from './FormikTextInput';
 import Text from './Text';
 import theme from '../theme';
+import useSignIn from '../hooks/useSignIn';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,9 +22,9 @@ const styles = StyleSheet.create({
   }
 });
 
-
-
 const SignIn = () => {
+  const [signIn] = useSignIn();
+
   const initialValues = {
     username: '',
     password: '',
@@ -38,8 +39,16 @@ const SignIn = () => {
       .required('Password is required'),
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    try {
+      const { data } = await signIn({ username, password });
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -47,9 +56,9 @@ const SignIn = () => {
       <View style={styles.container}>
         <FormikTextInput name='username' placeholder='Username' />
         <FormikTextInput name='password' placeholder='Password' secureTextEntry />
-        <TouchableWithoutFeedback onPress={onSubmit}>
+        <TouchableOpacity onPress={onSubmit}>
           <Text fontWeight='bold' style={styles.button}>Sign in</Text>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     </Formik>
   );
