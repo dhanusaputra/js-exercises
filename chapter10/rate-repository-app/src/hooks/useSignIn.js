@@ -6,7 +6,8 @@ const useSignIn = () => {
   const [mutate, result] = useMutation(AUTHORIZE);
 
   const signIn = async ({ username, password }) => {
-    mutate({ variables: { username, password } });
+    const response = await mutate({ variables: { username, password } });
+    return response;
   };
 
   return [signIn, result];
