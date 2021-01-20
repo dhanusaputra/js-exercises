@@ -13,11 +13,9 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
-  const { data } = useQuery(GET_REPOSITORIES, {
-    fetchPolicy: 'cache-and-network',
-  });
+const RepositoryListContainer = ({ data }) => {
   if (!data) return null;
+
   return (
     <FlatList
       data={data.repositories.edges}
@@ -28,5 +26,13 @@ const RepositoryList = () => {
     />
   );
 };
+
+const RepositoryList = () => {
+  const { data } = useQuery(GET_REPOSITORIES, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  return <RepositoryListContainer repositories={data} />;
+}
 
 export default RepositoryList;
