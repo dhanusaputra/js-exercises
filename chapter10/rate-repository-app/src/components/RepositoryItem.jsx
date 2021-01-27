@@ -52,13 +52,13 @@ const RepositoryItemHeader = ({ item }) => (
       <View style={styles.avatarContainer}>
         <Image 
           style={styles.avatar} 
-          source={item.ownerAvatarUrl}
+          source={{uri: item.ownerAvatarUrl}}
         />
       </View>
       <View style={styles.headerInfoContainer}>
-        <Text fontWeight='bold'>{item.fullName}</Text>
-        <Text color='secondary'>{item.description}</Text>
-        <Text style={{ alignSelf: 'flex-start', padding: 5, borderRadius: 5, backgroundColor: '#0366d6', color: 'white' }}>{item.language}</Text>
+        <Text fontWeight='bold' testID='fullName'>{item.fullName}</Text>
+        <Text color='secondary' testID='description'>{item.description}</Text>
+        <Text style={{ alignSelf: 'flex-start', padding: 5, borderRadius: 5, backgroundColor: '#0366d6', color: 'white' }} testID='language'>{item.language}</Text>
       </View>
     </View>
 );
@@ -66,19 +66,19 @@ const RepositoryItemHeader = ({ item }) => (
 const RepositoryItemBody= ({ item }) => (
   <View style={styles.bodyContainer}>
     <View style={styles.bodyItemContainer}>
-      <Text fontWeight='bold'>{formatCount(item.stargazersCount)}</Text>
+      <Text fontWeight='bold' testID='stargazersCount'>{formatCount(item.stargazersCount)}</Text>
       <Text color='secondary'>Stars</Text>
     </View>
     <View style={styles.bodyItemContainer}>
-      <Text fontWeight='bold'>{formatCount(item.forksCount)}</Text>
+      <Text fontWeight='bold' testID='forksCount'>{formatCount(item.forksCount)}</Text>
       <Text color='secondary'>Forks</Text>
     </View>
     <View style={styles.bodyItemContainer}>
-      <Text fontWeight='bold'>{formatCount(item.reviewCount)}</Text>
+      <Text fontWeight='bold' testID='reviewCount'>{formatCount(item.reviewCount)}</Text>
       <Text color='secondary'>Reviews</Text>
     </View>
     <View style={styles.bodyItemContainer}>
-      <Text fontWeight='bold'>{item.ratingAverage}</Text>
+      <Text fontWeight='bold' testID='ratingAverage'>{item.ratingAverage}</Text>
       <Text color='secondary'>Rating</Text>
     </View>
   </View>

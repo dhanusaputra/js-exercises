@@ -48,11 +48,28 @@ describe('RepositoryList', () => {
           },
         ],
       };
-      const { debug, getByTestId } = render(<RepositoryListContainer repositories={repositories} />);
 
-      debug();
+      const formatCount = c => {
+        return c >= 1000 ? (c/1000).toFixed(1).replace(/\.0+$/, '') + 'k' : c;
+      };
 
-      expect(getByTestId('repositoryList')).toHaveTextContent();
+      const { getAllByTestId } = render(<RepositoryListContainer repositories={repositories} />);
+
+      expect(getAllByTestId('fullName')[0]).toHaveTextContent(repositories.edges[0].node.fullName);
+      expect(getAllByTestId('description')[0]).toHaveTextContent(repositories.edges[0].node.description);
+      expect(getAllByTestId('language')[0]).toHaveTextContent(repositories.edges[0].node.language);
+      expect(getAllByTestId('forksCount')[0]).toHaveTextContent(formatCount(repositories.edges[0].node.forksCount));
+      expect(getAllByTestId('stargazersCount')[0]).toHaveTextContent(formatCount(repositories.edges[0].node.stargazersCount));
+      expect(getAllByTestId('reviewCount')[0]).toHaveTextContent(formatCount(repositories.edges[0].node.reviewCount));
+      expect(getAllByTestId('ratingAverage')[0]).toHaveTextContent(repositories.edges[0].node.ratingAverage);
+
+      expect(getAllByTestId('fullName')[1]).toHaveTextContent(repositories.edges[1].node.fullName);
+      expect(getAllByTestId('description')[1]).toHaveTextContent(repositories.edges[1].node.description);
+      expect(getAllByTestId('language')[1]).toHaveTextContent(repositories.edges[1].node.language);
+      expect(getAllByTestId('forksCount')[1]).toHaveTextContent(formatCount(repositories.edges[1].node.forksCount));
+      expect(getAllByTestId('stargazersCount')[1]).toHaveTextContent(formatCount(repositories.edges[1].node.stargazersCount));
+      expect(getAllByTestId('reviewCount')[1]).toHaveTextContent(formatCount(repositories.edges[1].node.reviewCount));
+      expect(getAllByTestId('ratingAverage')[1]).toHaveTextContent(repositories.edges[1].node.ratingAverage);
     });
   });
 });
