@@ -26,9 +26,9 @@ const SignInForm = ({ onSubmit }) => {
 
   return (
     <View style={styles.container}>
-			<FormikTextInput name='username' placeholder='Username'/>
-			<FormikTextInput secureTextEntry name='password' placeholder='Password'/>
-      <TouchableOpacity onPress={onSubmit} >
+			<FormikTextInput name='username' placeholder='Username' testID='usernameField'/>
+			<FormikTextInput secureTextEntry name='password' placeholder='Password' testID='passwordField'/>
+      <TouchableOpacity onPress={onSubmit} testID='submitButton' >
           <Text style={styles.button} fontWeight='bold'>
             Sign in
           </Text>
@@ -75,4 +75,5 @@ const SignIn = () => {
 
   return <SignInContainer onSubmit={onSubmit} />;
 };
+
 export default SignIn;
