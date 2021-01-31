@@ -17,7 +17,9 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*|react-router-native)"
     ],
-    "setupFilesAfterEnv": ["<rootDir>/setupTests.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.js"
+    ]
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
@@ -34,7 +36,8 @@
     "react-native-web": "~0.11.7",
     "react-router-dom": "^5.2.0",
     "react-router-native": "^5.2.0",
-    "yup": "^0.32.8"
+    "yup": "^0.32.8",
+    "expo-web-browser": "~8.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

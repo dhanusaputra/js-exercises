@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 
 import FormikTextInput from './FormikTextInput';
 import Text from './Text';
-import theme from '../theme';
 import useSignIn from '../hooks/useSignIn';
 
 const SignInForm = ({ onSubmit }) => {
@@ -15,13 +14,6 @@ const SignInForm = ({ onSubmit }) => {
 			backgroundColor: 'white',
 			padding: 5,
 		},
-		button: {
-			backgroundColor: theme.colors.primary,
-			color: 'white',
-			padding: 10,
-			borderRadius: 5,
-			textAlign: 'center',
-		}
 	});
 
   return (
@@ -29,7 +21,7 @@ const SignInForm = ({ onSubmit }) => {
 			<FormikTextInput name='username' placeholder='Username' testID='usernameField'/>
 			<FormikTextInput secureTextEntry name='password' placeholder='Password' testID='passwordField'/>
       <TouchableOpacity onPress={onSubmit} testID='submitButton' >
-          <Text style={styles.button} fontWeight='bold'>
+          <Text type='button' fontWeight='bold'>
             Sign in
           </Text>
       </TouchableOpacity>
@@ -61,7 +53,7 @@ export const SignInContainer = ({ onSubmit }) => {
 
 const SignIn = () => {
   const [signIn] = useSignIn();
-  let history = useHistory();
+  const history = useHistory();
 
   const onSubmit = async (values) => {
     const { username, password } = values;

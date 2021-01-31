@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 
 import Text from './Text';
 
@@ -38,12 +39,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
   },
+
+  // button
+  buttonContainer: {
+    marginTop: 10,
+  },
 });
 
-const RepositoryItem = ({ item  }) => (
+const RepositoryItem = ({ item, showButton }) => (
   <View style={styles.container}>
     <RepositoryItemHeader item={item}/>
     <RepositoryItemBody item={item}/>
+    <RepositoryItemButton item={item} show={showButton}/>
   </View>
 );
 
@@ -82,6 +89,16 @@ const RepositoryItemBody= ({ item }) => (
       <Text color='secondary'>Rating</Text>
     </View>
   </View>
+);
+
+const RepositoryItemButton= ({ item, show }) => (
+    <View style={styles.buttonContainer}>
+      {show && (
+        <TouchableOpacity onPress={() => WebBrowser.openBrowserAsync(item.url)}>
+          <Text type='button' fontWeight='bold'>Open in Github</Text>
+        </TouchableOpacity>
+      )}
+    </View>
 );
 
 const formatCount = c => {

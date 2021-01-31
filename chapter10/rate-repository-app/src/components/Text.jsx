@@ -23,15 +23,23 @@ const styles = StyleSheet.create({
   fontWeightBold: {
     fontWeight: theme.fontWeights.bold,
   },
+  typeButton: {
+    backgroundColor: theme.colors.primary,
+    color: 'white',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+  },
 });
 
-const Text = ({ color, fontSize, fontWeight, style, ...props }) => {
+const Text = ({ color, fontSize, fontWeight, type, style, ...props }) => {
   const textStyle = [
     styles.text,
     color === 'secondary' && styles.colorSecondary,
     color === 'primary' && styles.colorPrimary,
     fontSize === 'subheading' && styles.fontSizeSubheading,
     fontWeight === 'bold' && styles.fontWeightBold,
+    type === 'button' && styles.typeButton,
     style,
   ];
 
