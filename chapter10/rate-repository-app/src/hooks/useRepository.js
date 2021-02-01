@@ -10,6 +10,7 @@ const useRepository = ({ id }) => {
 
   return { 
     repository: data?.repository,
+    reviews: data?.repository?.reviews,
     loading, 
     error
   };
