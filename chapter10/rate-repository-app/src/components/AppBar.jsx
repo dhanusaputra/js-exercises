@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TouchableOpacity, Text, View, StyleSheet, ScrollView } from 'react-native';
-import { Link } from 'react-router-native';
+import { Link, useHistory } from 'react-router-native';
 import Constants from 'expo-constants';
+import { useApolloClient } from '@apollo/react-hooks';
+
+import AuthStorageContext from '../contexts/AuthStorageContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
+
 const AppBar = () => {
   return ( 
     <View style={styles.container}>
@@ -26,6 +30,7 @@ const AppBar = () => {
         <AppBarTab link="/sign-in" text="Sign in" />
         <AppBarTab link="/" text="Repositories" />
         <AppBarTab link="/create-review" text="Create a review" />
+        <SignOutTab />
       </ScrollView>
     </View>
   ); 
@@ -40,5 +45,25 @@ const AppBarTab = ( { link, text } ) => {
     </Link>
   );
 };
+
+const SignOutTab = () => {
+  const authStorage = useContext(AuthStorageContext);
+  const client = useApolloClient();
+  const history = useHistory();
+
+  const handleSignOut = async () => {
+    await authStorage.removeAccessToken();
+    client.resetStore();
+    history.push('/sign-in');
+  }
+
+  return(
+    <TouchableOpacity onPress={handleSignOut}>
+        <View style={styles.button}>
+          <Text style={styles.baseText}>Sign out</Text>
+        </View>
+    </TouchableOpacity>
+  );
+}
 
 export default AppBar;
