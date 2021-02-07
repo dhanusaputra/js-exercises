@@ -6,7 +6,8 @@ import { useHistory } from 'react-router-dom';
 
 import FormikTextInput from './FormikTextInput';
 import Text from './Text';
-import useCreateReview from  '../hooks/useCreateReview';
+import useSignUp from  '../hooks/useSignUp';
+import useSignIn from  '../hooks/useSignIn';
 
 const SignUpForm = ({ onSubmit }) => {
 	const styles = StyleSheet.create({
@@ -18,12 +19,11 @@ const SignUpForm = ({ onSubmit }) => {
 
   return (
     <View style={styles.container}>
-			<FormikTextInput name='ownerName' placeholder='Repository owner name' testID='repositoryOwnerNameField'/>
-			<FormikTextInput name='repositoryName' placeholder='Repository name' testID='repositoryNameField'/>
-			<FormikTextInput name='rating' placeholder='Rating between 0 and 100' testID='ratingField'/>
-			<FormikTextInput name='text' placeholder='Review' multiline numberOfLines={3} testID='reviewField'/>
-      <TouchableOpacity onPress={onSubmit} testID='createButton' >
-          <Text type='button' fontWeight='bold'>Create a review</Text>
+			<FormikTextInput name='username' placeholder='Username' testID='usernameField'/>
+			<FormikTextInput secureTextEntry name='password' placeholder='Password' testID='passwordField'/>
+			<FormikTextInput secureTextEntry name='passwordConfirmation' placeholder='Password Confirmation' testID='passwordConfirmationField'/>
+      <TouchableOpacity onPress={onSubmit} testID='signUpButton' >
+          <Text type='button' fontWeight='bold'>Sign up</Text>
       </TouchableOpacity>
     </View>
   );
@@ -31,17 +31,15 @@ const SignUpForm = ({ onSubmit }) => {
 
 export const SignUpContainer = ({ onSubmit }) => {
   const initialValues = {
-    ownerName: '',
-    repositoryName: '',
-    rating: '',
-    text: '',
+    username: '',
+    password: '',
+    passwordConfirmation: '',
   };
 
   const validationSchema = yup.object().shape({
-    ownerName: yup.string().required('Repository owner name is required'),
-    repositoryName: yup.string().required('Repository name is required'),
-    rating: yup.number().required('Rating is required').min(0).max(100),
-    text: yup.string(),
+    username: yup.string().required('Username is required'),
+    password: yup.string().required('Password is required'),
+    passwordConfirmation: yup.string().oneOf([yup.ref('password'), null], 'Password must match').required('Password confirmation is required')
   });
 
   return (
@@ -56,14 +54,16 @@ export const SignUpContainer = ({ onSubmit }) => {
 };
 
 const SignUp = () => {
-  const [createReview] = useCreateReview();
+  const [signUp] = useSignUp();
+  const [signIn] = useSignIn();
   const history = useHistory();
 
   const onSubmit = async (values) => {
-    const { ownerName, repositoryName, rating, text } = values;
+    const { username, password } = values;
     try {
-      const response = await createReview({ repositoryName, ownerName, rating, text });
-      history.push(`/${response.data.createReview.repositoryId}`);
+      await signUp({ username, password });
+      await signIn({ username, password });
+      history.push('/');
     } catch (e) {
       console.log(e.message);
     }

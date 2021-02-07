@@ -18,10 +18,10 @@ const CreateReviewForm = ({ onSubmit }) => {
 
   return (
     <View style={styles.container}>
-			<FormikTextInput name='ownerName' placeholder='Repository owner name' testID='repositoryOwnerNameField'/>
+			<FormikTextInput name='ownerName' placeholder='Repository owner name' testID='ownerNameField'/>
 			<FormikTextInput name='repositoryName' placeholder='Repository name' testID='repositoryNameField'/>
 			<FormikTextInput name='rating' placeholder='Rating between 0 and 100' testID='ratingField'/>
-			<FormikTextInput name='text' placeholder='Review' multiline numberOfLines={3} testID='reviewField'/>
+			<FormikTextInput name='text' placeholder='Review' multiline numberOfLines={3} testID='textField'/>
       <TouchableOpacity onPress={onSubmit} testID='createButton' >
           <Text type='button' fontWeight='bold'>Create a review</Text>
       </TouchableOpacity>

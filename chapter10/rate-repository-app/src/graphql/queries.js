@@ -50,3 +50,12 @@ export const GET_REPOSITORY = gql`
 		}
 	}
 `;
+
+export const GET_AUTHORIZED_USER = gql`
+  query getAuthorizedUser{
+    authorizedUser{
+      id
+      username
+    }
+  }
+`;

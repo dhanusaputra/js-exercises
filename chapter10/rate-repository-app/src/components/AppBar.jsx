@@ -5,6 +5,7 @@ import Constants from 'expo-constants';
 import { useApolloClient } from '@apollo/react-hooks';
 
 import AuthStorageContext from '../contexts/AuthStorageContext';
+import useGetAuthorizedUser from '../hooks/useGetAuthorizedUser';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,14 +25,15 @@ const styles = StyleSheet.create({
 
 
 const AppBar = () => {
+  const { id } = useGetAuthorizedUser();
   return ( 
     <View style={styles.container}>
       <ScrollView horizontal>
-        <AppBarTab link="/sign-in" text="Sign in" />
         <AppBarTab link="/" text="Repositories" />
-        <AppBarTab link="/create-review" text="Create a review" />
-        <AppBarTab link="/sign-up" text="Sign up"/>
-        <SignOutTab />
+        { id && <AppBarTab link="/create-review" text="Create a review" /> }
+        { !id && <AppBarTab link='/sign-in' text="Sign in" /> }
+        { !id && <AppBarTab link="/sign-up" text="Sign up"/> }
+        { id && <SignOutTab /> }
       </ScrollView>
     </View>
   ); 
