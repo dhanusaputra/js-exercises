@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/react-hooks';
 
 import { GET_REPOSITORIES } from '../graphql/queries';
 
-const useRepositories = (selector) => {
+const useRepositories = (selector, searchKeyword) => {
   let orderBy, orderDirection = '';
   if (selector == 'latestRepositories'){
     orderBy = 'CREATED_AT';
@@ -17,7 +17,7 @@ const useRepositories = (selector) => {
 
 	const { data, error, loading } = useQuery(GET_REPOSITORIES, {
 		fetchPolicy: 'cache-and-network',
-    variables: { orderBy, orderDirection },
+    variables: { orderBy, orderDirection, searchKeyword },
 	});
 
   return { 
