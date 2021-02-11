@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/react-hooks';
 
 import { GET_REPOSITORIES } from '../graphql/queries';
 
-const useRepositories = (selector, searchKeyword) => {
+const useRepositories = ({ selector, searchKeyword, first }) => {
   let orderBy, orderDirection = '';
   if (selector == 'latestRepositories'){
     orderBy = 'CREATED_AT';
@@ -15,15 +15,47 @@ const useRepositories = (selector, searchKeyword) => {
     orderDirection = 'ASC';
   }
 
-	const { data, error, loading } = useQuery(GET_REPOSITORIES, {
+  const variables = { orderBy, orderDirection, searchKeyword, first };
+	const { data, error, loading, fetchMore, ...result } = useQuery(GET_REPOSITORIES, {
 		fetchPolicy: 'cache-and-network',
-    variables: { orderBy, orderDirection, searchKeyword },
+    variables,
 	});
+
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data && data.repositories.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      query: GET_REPOSITORIES,
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const nextResult = {
+          repositories: {
+            ...fetchMoreResult.repositories,
+            edges: [
+              ...previousResult.repositories.edges,
+              ...fetchMoreResult.repositories.edges,
+            ],
+          },
+        };
+
+        return nextResult;
+      },
+    });
+  };
 
   return { 
     repositories: data?.repositories,
+    fetchMore: handleFetchMore,
     loading, 
-    error
+    error,
+    ...result,
   };
 };
 

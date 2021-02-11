@@ -58,6 +58,8 @@ export class RepositoryListContainer extends React.Component {
         )}
         keyExtractor={item => item.id}
         ListHeaderComponent={this.renderHeader}
+        onEndReached={this.props.onEndReach}
+        onEndReachedThreshold={0.5}
       />
     );
   }
@@ -69,20 +71,30 @@ const RepositoryList = () => {
 
   const history = useHistory();
 
-  const { repositories } = useRepositories(selector, searchKeyword);
+  const { repositories, fetchMore } = useRepositories({
+    selector,
+    searchKeyword,
+    first: 8,
+  });
+
+  const onEndReach = () => {
+    console.log('something');
+    fetchMore();
+  }
   
   const repositoryNodes = repositories
     ? repositories.edges.map(edge => edge.node)
     : [];
 
   return( 
-    <RepositoryListContainer 
-      repositories={repositoryNodes} 
-      history={history} 
-      setSelector={setSelector}
-      search={searchKeyword}
-      setSearch={setSearch}
-    />
+      <RepositoryListContainer 
+        repositories={repositoryNodes} 
+        onEndReach={onEndReach}
+        history={history} 
+        setSelector={setSelector}
+        search={searchKeyword}
+        setSearch={setSearch}
+      />
   );
 }
 
