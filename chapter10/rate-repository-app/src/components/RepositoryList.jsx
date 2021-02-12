@@ -74,11 +74,12 @@ const RepositoryList = () => {
   const { repositories, fetchMore } = useRepositories({
     selector,
     searchKeyword,
-    first: 8,
+    first: 4,
   });
 
+  if (!repositories) return null;
+
   const onEndReach = () => {
-    console.log('something');
     fetchMore();
   }
   

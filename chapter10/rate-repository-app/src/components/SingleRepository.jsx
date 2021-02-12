@@ -1,11 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-native';
 import { FlatList, View, StyleSheet } from 'react-native';
-import { format } from 'date-fns';
 
 import RepositoryItem from './RepositoryItem';
+import ReviewItem from './Review';
 import useRepository from '../hooks/useRepository';
-import Text from './Text';
 import theme from '../theme';
 
 const styles = StyleSheet.create({
@@ -55,28 +54,18 @@ const RepositoryInfo = ({ repository }) => {
   )
 };
 
-const ReviewItem = ({ review }) => {
-  return (
-    <View style={styles.reviewContainer}>
-      <View style={styles.ratingContainer}>
-        <Text color='primary' fontWeight='bold'>{review.rating}</Text>
-      </View>
-      <View style={styles.bodyContainer}>
-        <View style={styles.titleContainer}>
-          <Text fontWeight='bold'>{review.user.username}</Text>
-          <Text color='secondary'>{format(new Date(review.createdAt), 'dd.MM.yyyy')}</Text>
-        </View>
-        <Text>{review.text}</Text>
-      </View>
-    </View>
-  )
-};
-
 const SingleRepository = () => {
   const { id } = useParams();
-  const { repository, reviews } = useRepository({ id });
+  const { repository, reviews, fetchMore } = useRepository({
+    id,
+    first: 4,
+  });
 
   if (!repository) return null;
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
 	const reviewNodes = reviews
     ? reviews.edges.map(edge => edge.node)
@@ -89,6 +78,8 @@ const SingleRepository = () => {
       keyExtractor={({ id }) => id}
       ListHeaderComponent={ () => <RepositoryInfo repository={repository} />}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   )
 };

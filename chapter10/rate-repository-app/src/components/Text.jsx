@@ -30,6 +30,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: 'center',
   },
+  typeRedButton: {
+    backgroundColor: '#d6394c',
+    color: 'white',
+    padding: 10,
+    borderRadius: 5,
+    textAlign: 'center',
+  },
 });
 
 const Text = ({ color, fontSize, fontWeight, type, style, ...props }) => {
@@ -40,6 +47,7 @@ const Text = ({ color, fontSize, fontWeight, type, style, ...props }) => {
     fontSize === 'subheading' && styles.fontSizeSubheading,
     fontWeight === 'bold' && styles.fontWeightBold,
     type === 'button' && styles.typeButton,
+    type === 'redButton' && styles.typeRedButton,
     style,
   ];
 

@@ -29,10 +29,11 @@ const AppBar = () => {
   return ( 
     <View style={styles.container}>
       <ScrollView horizontal>
-        <AppBarTab link="/" text="Repositories" />
-        { id && <AppBarTab link="/create-review" text="Create a review" /> }
-        { !id && <AppBarTab link='/sign-in' text="Sign in" /> }
-        { !id && <AppBarTab link="/sign-up" text="Sign up"/> }
+        <AppBarTab link='/' text='Repositories' />
+        { id && <AppBarTab link='/create-review' text='Create a review' /> }
+        { id && <AppBarTab link='/review' text='My reviews' /> }
+        { !id && <AppBarTab link='/sign-in' text='Sign in' /> }
+        { !id && <AppBarTab link='/sign-up' text='Sign up'/> }
         { id && <SignOutTab /> }
       </ScrollView>
     </View>
