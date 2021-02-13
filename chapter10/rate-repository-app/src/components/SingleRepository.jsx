@@ -3,7 +3,7 @@ import { useParams } from 'react-router-native';
 import { FlatList, View, StyleSheet } from 'react-native';
 
 import RepositoryItem from './RepositoryItem';
-import ReviewItem from './Review';
+import ReviewItem from './ReviewItem';
 import useRepository from '../hooks/useRepository';
 import theme from '../theme';
 
